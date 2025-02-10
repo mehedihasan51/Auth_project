@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class RegistrController extends Controller{
@@ -21,7 +22,7 @@ class RegistrController extends Controller{
                 'fastName' => 'required|string|max:255',
                 'lastName' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'phone' => 'required|string|min:10|max:15|unique:users,phone',
+                'phone' => 'required|numeric|unique:users,phone',
                 'password' => 'required|string|min:6|confirmed',
             ]);
             if ($validator->fails()) {
@@ -40,11 +41,15 @@ class RegistrController extends Controller{
                 'password' => bcrypt($request->input('password')),
                 
             ]);
+
+
+            $token = JWTAuth::fromUser($user);
     
             return response()->json([
                 'status'=>'true',
                 'message'=>'User Successfully Regitration',
                 'code'=>201,
+                'access_token' => $token,
                 'data' => [
                 'fastName' => $user->fastName,
                 'lastName' => $user->lastName,

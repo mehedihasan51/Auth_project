@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Validator;
 
 class OtpController extends Controller{
 
+    /**
+     * @view JsonResponse
+     */
     public function SendOTPCode(Request $request)
     {
         try {
@@ -46,9 +49,9 @@ class OtpController extends Controller{
         }
     }
 
-
-
-
+    /**
+     * @view JsonResponse
+     */
     public function verifyOtp(Request $request)
     {
         try {
@@ -77,7 +80,7 @@ class OtpController extends Controller{
                     'code' => 401
                 ], 401);
             }
-            $user->otp = '0';
+            $user->otp = null;
             $user->save();
     
             $token = JWTAuth::fromUser($user);
